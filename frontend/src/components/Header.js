@@ -31,19 +31,19 @@ function Header() {
           FileFlow Pro
         </Link>
         <nav className="main-nav">
-          {/* We use <a> tags with onClick handlers for scrolling */}
-          <a className="nav-link" onClick={() => handleScroll('ai-summarizer')}>
+          {/* --- THESE ARE NOW <button> TAGS --- */}
+          <button className="nav-link" onClick={() => handleScroll('ai-summarizer')}>
             AI Summarizer
-          </a>
-          <a className="nav-link" onClick={() => handleScroll('pdf-tools')}>
+          </button>
+          <button className="nav-link" onClick={() => handleScroll('pdf-tools')}>
             PDF Tools
-          </a>
-          <a className="nav-link" onClick={() => handleScroll('document-converters')}>
+          </button>
+          <button className="nav-link" onClick={() => handleScroll('document-converters')}>
             Document Converters
-          </a>
-          <a className="nav-link" onClick={() => handleScroll('image-converters')}>
+          </button>
+          <button className="nav-link" onClick={() => handleScroll('image-converters')}>
             Image Converters
-          </a>
+          </button>
         </nav>
       </div>
     </header>
