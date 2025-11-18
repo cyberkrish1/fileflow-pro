@@ -1,0 +1,12 @@
+# Flask & Server
+Flask
+flask-cors
+gunicorn
+
+# Core Libraries
+Pillow
+PyPDF2
+pdf2docx
+docx2pdf
+fpdf2
+requests
