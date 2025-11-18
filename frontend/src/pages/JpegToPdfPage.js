@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_URL } from '../apiConfig'; // <-- 1. IMPORT
 
 function JpegToPdfPage() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -13,8 +14,6 @@ function JpegToPdfPage() {
     } else {
       setSelectedFile(null);
       setError('Please select a valid .jpg or .jpeg file');
-      // Clear the input visually if invalid file type
-      event.target.value = null; 
     }
   };
 
@@ -30,7 +29,8 @@ function JpegToPdfPage() {
     const formData = new FormData();
     formData.append('file', selectedFile);
 
-    fetch('http://localhost:5000/api/convert', {
+    // 2. USE THE API_URL VARIABLE
+    fetch(`${API_URL}/api/convert`, {
       method: 'POST',
       body: formData,
     })
@@ -53,7 +53,7 @@ function JpegToPdfPage() {
         window.URL.revokeObjectURL(url);
         
         setIsLoading(false);
-        setSelectedFile(null); // Clear the file input visually and from state
+        setSelectedFile(null); 
       })
       .catch((err) => {
         console.error('Conversion Error:', err);
@@ -73,22 +73,19 @@ function JpegToPdfPage() {
           id="fileUpload"
           className="file-input"
           accept=".jpg, .jpeg" 
-          onChange={handleFileChange} 
-          // Key to force re-render/reset input when selectedFile is null
-          key={selectedFile ? selectedFile.name : 'no-file'} 
+          onChange={handleFileChange}
+          key={selectedFile ? selectedFile.name : 'empty'}
         />
         <label htmlFor="fileUpload" className={`file-label ${selectedFile ? 'selected' : ''}`}>
-          {selectedFile ? 'File Selected: ' + selectedFile.name : 'Click to choose a file'}
+          {selectedFile ? selectedFile.name : 'Click to choose a file'}
         </label>
-        
-        {/* Removed redundant selected file display, it's now in the label */}
         
         <button 
           className="convert-button"
           onClick={handleConvert} 
           disabled={isLoading || !selectedFile}
         >
-          {isLoading ? 'Converting...' : 'Convert & Download'} <i className="fas fa-download"></i>
+          {isLoading ? 'Converting...' : 'Convert & Download'}
         </button>
         
         {error && <p className="error-message">{error}</p>}

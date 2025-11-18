@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import { API_URL } from '../apiConfig'; // <-- 1. IMPORT
 
-// This is the new component for Protecting PDFs
 function ProtectPdfPage() {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [password, setPassword] = useState(''); // State for password
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -34,9 +34,10 @@ function ProtectPdfPage() {
 
     const formData = new FormData();
     formData.append('file', selectedFile);
-    formData.append('password', password); // Add password to form data
+    formData.append('password', password);
 
-    fetch('http://localhost:5000/api/protect-pdf', {
+    // 2. USE THE API_URL VARIABLE
+    fetch(`${API_URL}/api/protect-pdf`, {
       method: 'POST',
       body: formData,
     })
@@ -87,7 +88,6 @@ function ProtectPdfPage() {
           {selectedFile ? 'File: ' + selectedFile.name : 'Click to choose a file'}
         </label>
 
-        {/* New Password Input */}
         <div className="password-input-container">
           <input
             type="password"

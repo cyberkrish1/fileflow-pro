@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import { API_URL } from '../apiConfig'; // <-- 1. IMPORT
 
-// This is the new component for PDF to Text
 function PdfToTextPage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -9,7 +9,6 @@ function PdfToTextPage() {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     
-    // Accept .pdf
     if (file && (file.type === 'application/pdf' || file.name.endsWith('.pdf'))) {
       setSelectedFile(file);
       setError(null);
@@ -32,8 +31,8 @@ function PdfToTextPage() {
     const formData = new FormData();
     formData.append('file', selectedFile);
 
-    // Point to the new backend endpoint
-    fetch('http://localhost:5000/api/pdf-to-text', {
+    // 2. USE THE API_URL VARIABLE
+    fetch(`${API_URL}/api/pdf-to-text`, {
       method: 'POST',
       body: formData,
     })
@@ -50,9 +49,7 @@ function PdfToTextPage() {
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        
-        a.download = 'converted.txt'; // Set the download name to .txt
-        
+        a.download = 'converted.txt';
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);

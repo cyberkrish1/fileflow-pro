@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import { API_URL } from '../apiConfig'; // <-- 1. IMPORT
 
-// This is the new component for Word to PDF
 function WordToPdfPage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -9,10 +9,9 @@ function WordToPdfPage() {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     
-    // Accept .doc and .docx
     const validTypes = [
-      'application/msword', // .doc
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // .docx
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     ];
 
     if (file && (validTypes.includes(file.type) || file.name.endsWith('.doc') || file.name.endsWith('.docx'))) {
@@ -37,8 +36,8 @@ function WordToPdfPage() {
     const formData = new FormData();
     formData.append('file', selectedFile);
 
-    // Point to the new backend endpoint
-    fetch('http://localhost:5000/api/word-to-pdf', {
+    // 2. USE THE API_URL VARIABLE
+    fetch(`${API_URL}/api/word-to-pdf`, {
       method: 'POST',
       body: formData,
     })
@@ -55,9 +54,7 @@ function WordToPdfPage() {
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        
-        a.download = 'converted.pdf'; // Set the download name to .pdf
-        
+        a.download = 'converted.pdf';
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);

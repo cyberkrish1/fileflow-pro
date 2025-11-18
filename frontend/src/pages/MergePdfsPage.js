@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
+import { API_URL } from '../apiConfig'; // <-- 1. IMPORT
 
-// This is the new component for Merging PDFs
 function MergePdfsPage() {
-  const [selectedFiles, setSelectedFiles] = useState(null); // Will hold a FileList
+  const [selectedFiles, setSelectedFiles] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const handleFileChange = (event) => {
     const files = event.target.files;
     
-    // Check if user selected at least 2 files
     if (files && files.length >= 2) {
       setSelectedFiles(files);
       setError(null);
     } else {
       setSelectedFiles(null);
       setError('Please select at least 2 PDF files to merge.');
-      event.target.value = null; // Clear the input
+      event.target.value = null;
     }
   };
 
@@ -31,14 +30,12 @@ function MergePdfsPage() {
 
     const formData = new FormData();
     
-    // --- KEY CHANGE ---
-    // Append each file to the FormData object with the same key 'files'
     for (let i = 0; i < selectedFiles.length; i++) {
       formData.append('files', selectedFiles[i]);
     }
 
-    // Point to the new backend endpoint
-    fetch('http://localhost:5000/api/merge-pdfs', {
+    // 2. USE THE API_URL VARIABLE
+    fetch(`${API_URL}/api/merge-pdfs`, {
       method: 'POST',
       body: formData,
     })
@@ -55,9 +52,7 @@ function MergePdfsPage() {
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        
-        a.download = 'merged.pdf'; // Set the download name
-        
+        a.download = 'merged.pdf';
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
@@ -83,12 +78,11 @@ function MergePdfsPage() {
           id="fileUpload"
           className="file-input"
           accept=".pdf" 
-          multiple // --- KEY CHANGE ---
+          multiple
           onChange={handleFileChange}
-          key={selectedFiles ? 'files-selected' : 'no-files'} // Reset input
+          key={selectedFiles ? 'files-selected' : 'no-files'}
         />
         <label htmlFor="fileUpload" className={`file-label ${selectedFiles ? 'selected' : ''}`}>
-          {/* --- KEY CHANGE --- */}
           {selectedFiles ? `${selectedFiles.length} files selected` : 'Click to choose files'}
         </label>
         

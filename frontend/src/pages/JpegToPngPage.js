@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import Footer from '../components/Footer';
+import { API_URL } from '../apiConfig'; // <-- 1. IMPORT
 
-// This is the new component for JPG to PNG
 function JpegToPngPage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -9,7 +8,6 @@ function JpegToPngPage() {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    // Still accepts only JPEG as input
     if (file && (file.type === 'image/jpeg' || file.type === 'image/jpg')) {
       setSelectedFile(file);
       setError(null);
@@ -32,9 +30,8 @@ function JpegToPngPage() {
     const formData = new FormData();
     formData.append('file', selectedFile);
 
-    // --- CHANGED LINE ---
-    // Point to the new backend endpoint
-    fetch('http://localhost:5000/api/jpg-to-png', {
+    // 2. USE THE API_URL VARIABLE
+    fetch(`${API_URL}/api/jpg-to-png`, {
       method: 'POST',
       body: formData,
     })
@@ -51,10 +48,7 @@ function JpegToPngPage() {
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        
-        // --- CHANGED LINE ---
-        a.download = 'converted.png'; // Set the download name to .png
-        
+        a.download = 'converted.png';
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
@@ -71,7 +65,6 @@ function JpegToPngPage() {
 
   return (
     <div className="converter-container">
-      {/* --- CHANGED TEXT --- */}
       <h2>JPEG to PNG Converter</h2>
       <p>Upload your .jpg or .jpeg file to convert it to a PNG.</p>
       
@@ -99,8 +92,6 @@ function JpegToPngPage() {
         {error && <p className="error-message">{error}</p>}
       </div>
     </div>
-    
-    
   );
 }
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import { API_URL } from '../apiConfig'; // <-- 1. IMPORT
 
-// This is the new component for PDF to Word
 function PdfToWordPage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -9,8 +9,6 @@ function PdfToWordPage() {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     
-    // --- CHANGED LINE ---
-    // Accept only PDF
     if (file && file.type === 'application/pdf') {
       setSelectedFile(file);
       setError(null);
@@ -33,9 +31,8 @@ function PdfToWordPage() {
     const formData = new FormData();
     formData.append('file', selectedFile);
 
-    // --- CHANGED LINE ---
-    // Point to the new backend endpoint
-    fetch('http://localhost:5000/api/pdf-to-word', {
+    // 2. USE THE API_URL VARIABLE
+    fetch(`${API_URL}/api/pdf-to-word`, {
       method: 'POST',
       body: formData,
     })
@@ -52,10 +49,7 @@ function PdfToWordPage() {
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        
-        // --- CHANGED LINE ---
-        a.download = 'converted.docx'; // Set the download name to .docx
-        
+        a.download = 'converted.docx';
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
@@ -72,7 +66,6 @@ function PdfToWordPage() {
 
   return (
     <div className="converter-container">
-      {/* --- CHANGED TEXT --- */}
       <h2>PDF to Word Converter</h2>
       <p>Upload your .pdf file to convert it to an editable .docx document.</p>
       
@@ -81,7 +74,6 @@ function PdfToWordPage() {
           type="file" 
           id="fileUpload"
           className="file-input"
-          // --- CHANGED LINE ---
           accept=".pdf" 
           onChange={handleFileChange}
           key={selectedFile ? selectedFile.name : 'no-file'} 

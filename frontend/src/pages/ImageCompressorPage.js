@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import '../App.css'; // We'll add new styles to App.css
+import '../App.css';
+import { API_URL } from '../apiConfig'; // <-- 1. IMPORT
 
 function ImageCompressorPage() {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [quality, setQuality] = useState(85); // State for compression quality
+  const [quality, setQuality] = useState(85);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -30,9 +31,10 @@ function ImageCompressorPage() {
 
     const formData = new FormData();
     formData.append('file', selectedFile);
-    formData.append('quality', quality); // Add quality to form data
+    formData.append('quality', quality);
 
-    fetch('http://localhost:5000/api/compress-image', {
+    // 2. USE THE API_URL VARIABLE
+    fetch(`${API_URL}/api/compress-image`, {
       method: 'POST',
       body: formData,
     })
@@ -43,7 +45,7 @@ function ImageCompressorPage() {
           });
         }
         const disposition = response.headers.get('Content-Disposition');
-        let downloadName = 'compressed.jpg'; // Default
+        let downloadName = 'compressed.jpg';
         if (disposition && disposition.indexOf('attachment') !== -1) {
           const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
           const matches = filenameRegex.exec(disposition);
@@ -58,14 +60,13 @@ function ImageCompressorPage() {
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        a.download = downloadName; // Use filename from server
+        a.download = downloadName;
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
         
         setIsLoading(false);
         setSelectedFile(null);
-        // Don't reset quality, user might want to reuse it
       })
       .catch((err) => {
         console.error('Compress Error:', err);
@@ -92,7 +93,6 @@ function ImageCompressorPage() {
           {selectedFile ? 'File: ' + selectedFile.name : 'Click to choose a file'}
         </label>
 
-        {/* New Quality Slider */}
         <div className="compressor-options">
           <label htmlFor="quality">Compression Quality: <strong>{quality}</strong></label>
           <p>(For JPGs. PNGs will be optimized losslessly)</p>

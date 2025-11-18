@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
+import { API_URL } from '../apiConfig'; // <-- 1. IMPORT
 
-// This is the new component for Splitting PDFs
 function SplitPdfPage() {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [startPage, setStartPage] = useState(''); // State for start page
-  const [endPage, setEndPage] = useState(''); // State for end page
+  const [startPage, setStartPage] = useState('');
+  const [endPage, setEndPage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -35,10 +35,11 @@ function SplitPdfPage() {
 
     const formData = new FormData();
     formData.append('file', selectedFile);
-    formData.append('startPage', startPage); // Add start page
-    formData.append('endPage', endPage); // Add end page
+    formData.append('startPage', startPage);
+    formData.append('endPage', endPage);
 
-    fetch('http://localhost:5000/api/split-pdf', {
+    // 2. USE THE API_URL VARIABLE
+    fetch(`${API_URL}/api/split-pdf`, {
       method: 'POST',
       body: formData,
     })
@@ -49,7 +50,7 @@ function SplitPdfPage() {
           });
         }
         const disposition = response.headers.get('Content-Disposition');
-        let downloadName = 'split.pdf'; // Default
+        let downloadName = 'split.pdf';
         if (disposition && disposition.indexOf('attachment') !== -1) {
           const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
           const matches = filenameRegex.exec(disposition);
@@ -99,7 +100,6 @@ function SplitPdfPage() {
           {selectedFile ? 'File: ' + selectedFile.name : 'Click to choose a file'}
         </label>
 
-        {/* Re-using styles from Image Resizer */}
         <div className="dimension-inputs">
           <input
             type="number"

@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
+import { API_URL } from '../apiConfig'; // <-- 1. IMPORT
 
-// This is the new component for PDF Summarizer
 function PdfSummarizerPage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [summaryText, setSummaryText] = useState(''); // State for the summary
+  const [summaryText, setSummaryText] = useState('');
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file && file.type === 'application/pdf') {
       setSelectedFile(file);
       setError(null);
-      setSummaryText(''); // Clear previous summary
+      setSummaryText('');
     } else {
       setSelectedFile(null);
       setError('Please select a valid .pdf file');
@@ -33,19 +33,17 @@ function PdfSummarizerPage() {
     const formData = new FormData();
     formData.append('file', selectedFile);
 
-    // Point to the new backend endpoint
-    fetch('http://localhost:5000/api/summarize-pdf', {
+    // 2. USE THE API_URL VARIABLE
+    fetch(`${API_URL}/api/summarize-pdf`, {
       method: 'POST',
       body: formData,
     })
       .then((response) => {
-        // We expect JSON, not a blob
         return response.json().then(data => {
           if (!response.ok) {
-            // If response is not OK, throw an error with the message from backend
             throw new Error(data.error || 'Something went wrong');
           }
-          return data; // This contains { summary: "..." }
+          return data;
         });
       })
       .then((data) => {
@@ -89,7 +87,6 @@ function PdfSummarizerPage() {
         {error && <p className="error-message">{error}</p>}
       </div>
 
-      {/* NEW: Display Loading State */}
       {isLoading && (
         <div className="loading-spinner-container">
           <div className="loading-spinner"></div>
@@ -97,7 +94,6 @@ function PdfSummarizerPage() {
         </div>
       )}
 
-      {/* NEW: Display the summary */}
       {summaryText && (
         <div className="summary-result-box">
           <h3>Summary:</h3>

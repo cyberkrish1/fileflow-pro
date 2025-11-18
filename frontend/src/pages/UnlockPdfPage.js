@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import { API_URL } from '../apiConfig'; // <-- 1. IMPORT
 
-// This is the new component for Unlocking PDFs
 function UnlockPdfPage() {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [password, setPassword] = useState(''); // State for password
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -36,8 +36,8 @@ function UnlockPdfPage() {
     formData.append('file', selectedFile);
     formData.append('password', password);
 
-    // Point to the new backend endpoint
-    fetch('http://localhost:5000/api/unlock-pdf', {
+    // 2. USE THE API_URL VARIABLE
+    fetch(`${API_URL}/api/unlock-pdf`, {
       method: 'POST',
       body: formData,
     })
@@ -54,7 +54,7 @@ function UnlockPdfPage() {
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        a.download = 'unlocked.pdf'; // New download name
+        a.download = 'unlocked.pdf';
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
@@ -88,7 +88,6 @@ function UnlockPdfPage() {
           {selectedFile ? 'File: ' + selectedFile.name : 'Click to choose a file'}
         </label>
 
-        {/* Re-using styles from Protect PDF */}
         <div className="password-input-container">
           <input
             type="password"

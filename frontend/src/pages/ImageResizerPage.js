@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import '../App.css'; // We'll add new styles to App.css
+import '../App.css';
+import { API_URL } from '../apiConfig'; // <-- 1. IMPORT
 
 function ImageResizerPage() {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [width, setWidth] = useState(''); // State for width
-  const [height, setHeight] = useState(''); // State for height
+  const [width, setWidth] = useState('');
+  const [height, setHeight] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -35,10 +36,11 @@ function ImageResizerPage() {
 
     const formData = new FormData();
     formData.append('file', selectedFile);
-    formData.append('width', width); // Add width to form data
-    formData.append('height', height); // Add height to form data
+    formData.append('width', width);
+    formData.append('height', height);
 
-    fetch('http://localhost:5000/api/resize-image', {
+    // 2. USE THE API_URL VARIABLE
+    fetch(`${API_URL}/api/resize-image`, {
       method: 'POST',
       body: formData,
     })
@@ -48,9 +50,8 @@ function ImageResizerPage() {
             throw new Error(err.error || 'Something went wrong');
           });
         }
-        // Get the filename from the Content-Disposition header
         const disposition = response.headers.get('Content-Disposition');
-        let downloadName = 'resized-image.jpg'; // Default
+        let downloadName = 'resized-image.jpg';
         if (disposition && disposition.indexOf('attachment') !== -1) {
           const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
           const matches = filenameRegex.exec(disposition);
@@ -65,7 +66,7 @@ function ImageResizerPage() {
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        a.download = downloadName; // Use filename from server
+        a.download = downloadName;
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
@@ -100,7 +101,6 @@ function ImageResizerPage() {
           {selectedFile ? 'File: ' + selectedFile.name : 'Click to choose a file'}
         </label>
 
-        {/* New Width/Height Inputs */}
         <div className="dimension-inputs">
           <input
             type="number"
